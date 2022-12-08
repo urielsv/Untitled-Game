@@ -2,21 +2,28 @@ package com.untgame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends ScreenAdapter {
 
     final UntitledGame game;
 
+    int widthScreen, heightScreen;
     OrthographicCamera camera;
 
     public MainMenuScreen(final UntitledGame game) {
         this.game = game;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Defs.SCREEN_WIDTH.getValue(), Defs.SCREEN_HEIGHT.getValue());
+
+        this.widthScreen = Gdx.graphics.getWidth();
+        this.heightScreen = Gdx.graphics.getHeight();
+        this.camera = new OrthographicCamera();
+        this.camera.setToOrtho(false, widthScreen, heightScreen);
+
     }
 
     @Override
@@ -42,7 +49,7 @@ public class MainMenuScreen implements Screen {
 		game.batch.end();
 
         if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScreen(game));
+            game.setScreen(new GameScreen(camera));
             dispose();
         }
     }

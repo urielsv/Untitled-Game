@@ -3,37 +3,65 @@ package com.untgame.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.untgame.game.helper.BodyHelperService;
+import com.untgame.game.objects.player.Player;
 
-public class GameScreen implements Screen {
+import static com.untgame.game.helper.Constants.*;
 
-    private final UntitledGame game;
+public class GameScreen extends ScreenAdapter {
+
+    //private final UntitledGame game;
 
     OrthographicCamera camera;
-    Rectangle player;
+    private SpriteBatch batch;
+    private World level; // levels
+    private Box2DDebugRenderer box2DDebugRenderer;
+
+    Rectangle rect;
+
     Texture playerImg;
     int imgSize;
 
-    public GameScreen(final UntitledGame game) {
-        this.game = game;
+    private Player player;
+
+    public GameScreen(OrthographicCamera camera) {
+        this.camera = camera;
+        this.batch = new SpriteBatch();
+        this.level = new World(new Vector2(0, 0), false);
+        this.box2DDebugRenderer = new Box2DDebugRenderer();
 
         playerImg = new Texture("player1.png");
 
         imgSize = 256; // TEMP
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Defs.SCREEN_WIDTH.getValue(), Defs.SCREEN_HEIGHT.getValue());
+        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        player = new Rectangle();
+
+        rect = new Rectangle();
+
         // Centered.
-        player.x = Defs.SCREEN_WIDTH.getValue() / 2f - imgSize / 2f;
-        player.y = Defs.SCREEN_HEIGHT.getValue() / 2f - imgSize / 2f;
+        rect.x = SCREEN_WIDTH / 2f - imgSize / 2f;
+        rect.y = SCREEN_HEIGHT / 2f - imgSize / 2f;
+        rect.width = imgSize;
+        rect.height = imgSize;
 
-        player.width = imgSize;
-        player.height = imgSize;
+        Body body = BodyHelperService.createBody(rect.x, rect.y, imgSize, imgSize, false, level);
+        this.setPlayer(new Player(rect.getWidth(), rect.getHeight(), body));
+
     }
 
     @Override
@@ -43,42 +71,60 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0.2f, 0.2f, 1);
+        //ScreenUtils.clear(0, 0.2f, 0.2f, 1);
+        this.update();
 
-        camera.update();
-
-        game.batch.setProjectionMatrix(camera.combined);
-
-        game.batch.begin();
-        game.font.draw(game.batch, "Ingame test.", 5, 100);
-        game.batch.draw(playerImg, player.x, player.y, player.width, player.height);
-        game.batch.end();
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
-        // WASD (Controls)
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W))
-            player.y += 400 * Gdx.graphics.getDeltaTime();
+        batch.begin();
+        // render objects
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A))
-            player.x -= 400 * Gdx.graphics.getDeltaTime();
+        batch.end();
+        box2DDebugRenderer.render(level, camera.combined.scl(PPM));
+        //game.font.draw(game.batch, "Ingame test.", 5, 100);
+        //game.batch.draw(playerImg, player.x, player.y, player.width, player.height);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S))
-            player.y -= 400 * Gdx.graphics.getDeltaTime();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
-            player.x += 400 * Gdx.graphics.getDeltaTime();
 
         // BORDERS
 
-        if (player.x < 0)
-            player.x = 0;
-        if (player.x > Defs.SCREEN_WIDTH.getValue() - imgSize)
-            player.x = Defs.SCREEN_WIDTH.getValue() - imgSize;
-        if (player.y < 0)
-            player.y = 0;
-        if (player.y > Defs.SCREEN_HEIGHT.getValue() - imgSize)
-            player.y = Defs.SCREEN_HEIGHT.getValue() - imgSize;
+        if (rect.x < 0)
+            rect.x = 0;
+        if (rect.x > SCREEN_WIDTH - imgSize)
+            rect.x = SCREEN_WIDTH - imgSize;
+        if (rect.y < 0)
+            rect.y = 0;
+        if (rect.y > SCREEN_HEIGHT - imgSize)
+            rect.y = SCREEN_HEIGHT - imgSize;
 
+    }
+
+    private void update() {
+        level.step(1f / REFRESH_RATE, 6, 2);
+        cameraUpdate();
+
+        batch.setProjectionMatrix(camera.combined);
+
+        player.update();
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
+    }
+
+    private void cameraUpdate() {
+        Vector3 position = camera.position;
+        // El round es para que la camara sea mas "smooth"
+        position.x = Math.round(player.getBody().getPosition().x * PPM * 10) / 10f;
+        position.y = Math.round(player.getBody().getPosition().y * PPM * 10) / 10f;
+        camera.position.set(position);
+        camera.update();
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     @Override
