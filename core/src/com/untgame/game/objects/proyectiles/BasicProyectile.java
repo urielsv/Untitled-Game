@@ -16,7 +16,7 @@ public class BasicProyectile{
         this.x=x;
         this.y=y;
         if (texture == null){
-            texture = new Texture("badlogic.jpg");
+            texture = new Texture("bullet.png");
         }
     }
 

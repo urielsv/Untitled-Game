@@ -87,10 +87,9 @@ public class GameScreen extends ScreenAdapter {
 
         orthogonalTiledMapRenderer.render();
 
-        timer+=0.1;
-
+        timer += 0.1f;
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer>=2){
-            bullets.add(new BasicProyectile(player.getBody().getPosition().x*PPM, player.getBody().getPosition().y*PPM));
+            bullets.add(new BasicProyectile((player.getBody().getPosition().x - player.getWidth() / 2 / PPM ) * PPM, (player.getBody().getPosition().y - player.getHeight() / 2 / PPM) * PPM));
             timer=0;
         }
 

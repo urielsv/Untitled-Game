@@ -15,8 +15,13 @@ public class Player extends GameEntity {
         this.speed = 8f;
     }
 
-    public float getX(){return x;}
-    public float getY(){return y;}
+    public float getWidth() {
+        return width;
+    }
+    public float getHeight() {
+        return height;
+    }
+
 
     @Override
     public void update() {
