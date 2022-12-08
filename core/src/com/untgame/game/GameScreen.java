@@ -38,6 +38,8 @@ public class GameScreen extends ScreenAdapter {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private TileMapHelper tileMapHelper;
 
+    private double timer=0;
+
     Rectangle rect;
 
     Texture playerImg;
@@ -85,8 +87,11 @@ public class GameScreen extends ScreenAdapter {
 
         orthogonalTiledMapRenderer.render();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            bullets.add(new BasicProyectile(player.gameEntity.getX(), player.getBody().getPosition().y));
+        timer+=0.1;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer>=2){
+            bullets.add(new BasicProyectile(player.getBody().getPosition().x*PPM, player.getBody().getPosition().y*PPM));
+            timer=0;
         }
 
         ArrayList<BasicProyectile> remBullets = new ArrayList<BasicProyectile>();

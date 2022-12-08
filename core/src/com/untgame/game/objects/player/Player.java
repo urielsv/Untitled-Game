@@ -9,18 +9,21 @@ import static com.untgame.game.helper.Constants.PPM;
 
 public class Player extends GameEntity {
 
+
     public Player(float width, float height, Body body) {
         super(width, height, body);
         this.speed = 8f;
     }
 
+    public float getX(){return x;}
+    public float getY(){return y;}
+
     @Override
     public void update() {
-        x = body.getPosition().x * PPM;
-        y = body.getPosition().y * PPM;
+        x = body.getPosition().x ;
+        y = body.getPosition().y ;
 
         checkUserInput();
-
     }
 
     private void checkUserInput() {
@@ -28,17 +31,24 @@ public class Player extends GameEntity {
         velY = 0;
 
         // WASD (Controls)
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W))
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             velY = 1;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A))
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
             velX = -1;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S))
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             velY = -1;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             velX = 1;
+
+        }
 
         body.setLinearVelocity(velX * speed, velY * speed);
 
