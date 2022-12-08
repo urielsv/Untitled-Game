@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
 public class BasicProyectile{
-    public static final int SPEED = 500;
+    public static final int SPEED = 300;
     public boolean remove;
     private static Texture texture;
     float x,y;
@@ -16,7 +16,7 @@ public class BasicProyectile{
         this.x=x;
         this.y=y;
         if (texture == null){
-            texture = new Texture("badlogic.jpg");
+            texture = new Texture("bullet.png");
         }
     }
 

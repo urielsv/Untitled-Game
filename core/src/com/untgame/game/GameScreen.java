@@ -20,6 +20,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.untgame.game.helper.BodyHelperService;
 import com.untgame.game.helper.TileMapHelper;
 import com.untgame.game.objects.player.Player;
+import com.untgame.game.objects.proyectiles.BasicProyectile;
+
+import java.util.ArrayList;
 
 import static com.untgame.game.helper.Constants.*;
 
@@ -42,6 +45,8 @@ public class GameScreen extends ScreenAdapter {
 
     private Player player;
 
+    ArrayList<BasicProyectile> bullets;
+
     public World getLevel() {
         return level;
     }
@@ -55,6 +60,8 @@ public class GameScreen extends ScreenAdapter {
         this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
 
         playerImg = new Texture("player1.png");
+
+        bullets = new ArrayList<BasicProyectile>();
 
         imgSize = 16; // TEMP
 
@@ -78,12 +85,28 @@ public class GameScreen extends ScreenAdapter {
 
         orthogonalTiledMapRenderer.render();
 
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            bullets.add(new BasicProyectile(player.gameEntity.getX(), player.getBody().getPosition().y));
+        }
+
+        ArrayList<BasicProyectile> remBullets = new ArrayList<BasicProyectile>();
+        for (BasicProyectile bullet : bullets) {
+            bullet.update(delta);
+            if (bullet.remove)
+                remBullets.add(bullet);
+        }
+        bullets.removeAll(remBullets);
+
         batch.begin();
         // render objects
+        for (BasicProyectile bullet : bullets) {
+            bullet.render(this.batch);
+        }
 
         batch.end();
         box2DDebugRenderer.render(level, camera.combined.scl(PPM));
-        //game.font.draw(game.batch, "Ingame test.", 5, 100);
+        //font.draw(game.batch, "Ingame test.", 5, 100);
+
         //game.batch.draw(playerImg, player.x, player.y, player.width, player.height);
 
 
@@ -112,8 +135,8 @@ public class GameScreen extends ScreenAdapter {
     private void cameraUpdate() {
         Vector3 position = camera.position;
         // El round es para que la camara sea mas "smooth"
-        position.x = Math.round(player.getBody().getPosition().x * PPM * 10) / 10f;
-        position.y = Math.round(player.getBody().getPosition().y * PPM * 10) / 10f;
+        position.x = Math.round(player.getBody().getPosition().x * PPM * 100) / 100f;
+        position.y = Math.round(player.getBody().getPosition().y * PPM * 10) / 100f;
         camera.position.set(position);
         camera.update();
     }

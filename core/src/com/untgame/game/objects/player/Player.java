@@ -11,7 +11,7 @@ public class Player extends GameEntity {
 
     public Player(float width, float height, Body body) {
         super(width, height, body);
-        this.speed = 4f;
+        this.speed = 8f;
     }
 
     @Override
