@@ -37,6 +37,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
         camera.update();
 
+        //camera.zoom = 0.8f;
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();

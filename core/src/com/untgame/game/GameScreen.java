@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.untgame.game.helper.BodyHelperService;
 import com.untgame.game.helper.TileMapHelper;
 import com.untgame.game.objects.player.Player;
@@ -60,14 +61,12 @@ public class GameScreen extends ScreenAdapter {
         this.tileMapHelper = new TileMapHelper(this);
         this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
 
-        playerImg = new Texture("player1.png");
-
         bullets = new ArrayList<BasicProyectile>();
 
         imgSize = (int) PPM; // TEMP
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(true, SCREEN_WIDTH, SCREEN_HEIGHT);
+        camera = new OrthographicCamera(500, 200);
+        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     }
 
@@ -101,10 +100,11 @@ public class GameScreen extends ScreenAdapter {
         }
         bullets.removeAll(remBullets);
 
-        // render objects
 
        // direc[dir].img
 
+
+        // render objects
         batch.begin();
 
             player.draw(batch);
@@ -130,7 +130,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void update() {
-        level.step(1f / REFRESH_RATE, 6, 2);
+        level.step(1f / REFRESH_RATE, 10, 5);
         cameraUpdate();
 
         batch.setProjectionMatrix(camera.combined);
@@ -147,8 +147,8 @@ public class GameScreen extends ScreenAdapter {
         Vector3 position = camera.position;
         // El round es para que la camara sea mas "smooth"
         // No se por que con 15 funciona bien.
-        position.x = Math.round(player.getBody().getPosition().x * PPM * 15) / 15f;
-        position.y = Math.round(player.getBody().getPosition().y * PPM * 15) / 15f;
+        position.x = Math.round(player.getBody().getPosition().x * PPM * 10) / 10f;
+        position.y = Math.round(player.getBody().getPosition().y * PPM * 10) / 10f;
         camera.position.set(position);
         camera.update();
     }
