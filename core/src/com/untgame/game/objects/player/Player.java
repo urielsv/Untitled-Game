@@ -11,7 +11,7 @@ public class Player extends GameEntity {
 
     public Player(float width, float height, Body body) {
         super(width, height, body);
-        this.speed = 100f;
+        this.speed = 4f;
     }
 
     @Override
@@ -25,6 +25,7 @@ public class Player extends GameEntity {
 
     private void checkUserInput() {
         velX = 0;
+        velY = 0;
 
         // WASD (Controls)
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W))

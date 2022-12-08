@@ -56,22 +56,10 @@ public class GameScreen extends ScreenAdapter {
 
         playerImg = new Texture("player1.png");
 
-        imgSize = 256; // TEMP
+        imgSize = 16; // TEMP
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-
-        rect = new Rectangle();
-
-        // Centered.
-        rect.x = SCREEN_WIDTH / 2f - imgSize / 2f;
-        rect.y = SCREEN_HEIGHT / 2f - imgSize / 2f;
-        rect.width = imgSize;
-        rect.height = imgSize;
-
-        Body body = BodyHelperService.createBody(rect.x, rect.y, imgSize, imgSize, false, level);
-        this.setPlayer(new Player(rect.getWidth(), rect.getHeight(), body));
 
     }
 
@@ -100,17 +88,11 @@ public class GameScreen extends ScreenAdapter {
 
 
 
-        // BORDERS
 
-        if (rect.x < 0)
-            rect.x = 0;
-        if (rect.x > SCREEN_WIDTH - imgSize)
-            rect.x = SCREEN_WIDTH - imgSize;
-        if (rect.y < 0)
-            rect.y = 0;
-        if (rect.y > SCREEN_HEIGHT - imgSize)
-            rect.y = SCREEN_HEIGHT - imgSize;
+    }
 
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     private void update() {
@@ -136,9 +118,6 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
     @Override
     public void resize(int width, int height) {
