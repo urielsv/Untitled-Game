@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="68" height="46" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="24">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="68" height="46" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="40">
  <tileset firstgid="1" source="tiles.tsx"/>
- <layer id="1" name="background" width="68" height="46">
+ <tileset firstgid="401" source="tileset.tsx"/>
+ <layer id="3" name="background" width="68" height="46">
   <data encoding="base64" compression="zlib">
-   eJzt0LkNwDAAAzHH+w9t5CuudJMi4AEaQBxDZ/OZ7ng0Ho1H49F4NB6NR+PReDQejUfj0Xg0Ho1H49F4NB6NR+PReDQejUfj0Xg0Ho1H49Hm5v4ej8aj8Wg8Go/Go/Fo78/DrvHgwYMHDx48vvNYeA4DaQ==
+   eJztl1EKgzAQRGNysnoSr9W/HqXQI7TQ756kVcy2S4hRwbBTnYEhRYtuhn1ZdI6iyro19NO7TvJ4NbTO493QOg/rXkUweSEv5IW8kBfyQl7IC3khL0jWsu5VBJMX8lIy5wt5IS/LPIi8/JzmYd2r1k7zsO5Xa5MX8kJe1hmZF4tvK2Regh/ravsa21hnum79TmReRJ0fHXP4ukbNqLwMOnmXVaeuH4WXdP+SQdorW9eNykvc71XvP82jRt2IvIh0HqX+2Dsvaq4s6o+j8JI7O/RaY8Yg8iLMzPFSo25EXvR86TO5THm4HzaeMai8hKQH5rR3XoQZySVUmCVT70TkxcoPUF6sXOuc/lfr80OYoZy7x/PqkVlz10r35q4tffaa/6xdp557jr8/N4hfZw==
   </data>
  </layer>
  <objectgroup id="2" name="objects">
-  <object id="20" x="0" y="480">
-   <polygon points="0,0 160,0 160,128 0,128"/>
+  <object id="30" name="player" x="495.75" y="672.25" width="32" height="32"/>
+  <object id="34" x="0" y="736">
+   <polygon points="0,0 1088,0 1088,-16 0,-16"/>
   </object>
-  <object id="21" x="0" y="608">
-   <polygon points="0,0 0,128 1056,128 1056,0"/>
+  <object id="35" x="1088" y="0">
+   <polygon points="0,0 0,720 -16,720 -16,0"/>
   </object>
-  <object id="22" x="1055" y="-1">
-   <polygon points="0,0 33,1 33,737 1,737"/>
+  <object id="36" x="1072" y="0">
+   <polygon points="0,0 -1072,0 -1072,16 0,16"/>
   </object>
-  <object id="23" name="player" x="400" y="576" width="16" height="16"/>
+  <object id="37" x="0" y="16">
+   <polygon points="0,0 16,0 16,704 0,704"/>
+  </object>
+  <object id="39" x="591.333" y="449">
+   <polygon points="0,0 1,174.333 162.667,173.667 162,-1.33333"/>
+  </object>
  </objectgroup>
 </map>

@@ -1,5 +1,6 @@
 package com.untgame.game;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -40,8 +41,6 @@ public class GameScreen extends ScreenAdapter {
 
     private double timer=0;
 
-    Rectangle rect;
-
     Texture playerImg;
     int imgSize;
 
@@ -65,10 +64,10 @@ public class GameScreen extends ScreenAdapter {
 
         bullets = new ArrayList<BasicProyectile>();
 
-        imgSize = 16; // TEMP
+        imgSize = (int) PPM; // TEMP
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+        camera.setToOrtho(true, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     }
 
@@ -88,10 +87,11 @@ public class GameScreen extends ScreenAdapter {
         orthogonalTiledMapRenderer.render();
 
         timer += 0.1f;
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer>=2){
-            bullets.add(new BasicProyectile((player.getBody().getPosition().x - player.getWidth() / 2 / PPM ) * PPM, (player.getBody().getPosition().y - player.getHeight() / 2 / PPM) * PPM));
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer >= 1.5f){
+            bullets.add(new BasicProyectile((player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM, (player.getBody().getPosition().y - player.getHeight() / 2 / 2 / PPM) * PPM));
             timer=0;
         }
+
 
         ArrayList<BasicProyectile> remBullets = new ArrayList<BasicProyectile>();
         for (BasicProyectile bullet : bullets) {
@@ -101,11 +101,18 @@ public class GameScreen extends ScreenAdapter {
         }
         bullets.removeAll(remBullets);
 
-        batch.begin();
         // render objects
-        for (BasicProyectile bullet : bullets) {
-            bullet.render(this.batch);
-        }
+
+       // direc[dir].img
+
+        batch.begin();
+
+            player.draw(batch);
+
+            for (BasicProyectile bullet : bullets) {
+                bullet.render(this.batch);
+            }
+            player.render(this.batch);
 
         batch.end();
         box2DDebugRenderer.render(level, camera.combined.scl(PPM));
@@ -139,8 +146,9 @@ public class GameScreen extends ScreenAdapter {
     private void cameraUpdate() {
         Vector3 position = camera.position;
         // El round es para que la camara sea mas "smooth"
-        position.x = Math.round(player.getBody().getPosition().x * PPM * 100) / 100f;
-        position.y = Math.round(player.getBody().getPosition().y * PPM * 10) / 100f;
+        // No se por que con 15 funciona bien.
+        position.x = Math.round(player.getBody().getPosition().x * PPM * 15) / 15f;
+        position.y = Math.round(player.getBody().getPosition().y * PPM * 15) / 15f;
         camera.position.set(position);
         camera.update();
     }

@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
-public class BasicProyectile{
-    public static final int SPEED = 300;
+public class BasicProyectile {
+    public static final int SPEED = 250;
     public boolean remove;
     private static Texture texture;
     float x,y;
@@ -15,14 +15,20 @@ public class BasicProyectile{
     public BasicProyectile(float x, float y) {
         this.x=x;
         this.y=y;
-        if (texture == null){
+        if (texture == null) {
             texture = new Texture("bullet.png");
         }
     }
 
     public void update (float deltaTime){
-        y +=SPEED * deltaTime;
-        if (y>Gdx.graphics.getHeight())
+
+        Vector2 cursorLocation = new Vector2(0, 0);
+        cursorLocation.x = Gdx.input.getX();
+        cursorLocation.y = Gdx.input.getY();
+
+        y += SPEED * deltaTime;
+        //x += SPEED * deltaTime;
+        if (y > Gdx.graphics.getHeight() || x > Gdx.graphics.getWidth())
             remove = true;
     }
 

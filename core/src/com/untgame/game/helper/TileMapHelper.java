@@ -1,5 +1,6 @@
 package com.untgame.game.helper;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -51,7 +52,7 @@ public class TileMapHelper {
                                                             gameScreen.getLevel()
                     );
 
-                    gameScreen.setPlayer(new Player(rectangle.getWidth(), rectangle.getHeight(), body));
+                    gameScreen.setPlayer(new Player(rectangle.getWidth(), rectangle.getHeight(), body, new Texture("bullet.png")));
                 }
             }
         }

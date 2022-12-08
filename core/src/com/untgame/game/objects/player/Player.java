@@ -2,17 +2,20 @@ package com.untgame.game.objects.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 
+import static com.untgame.game.helper.Constants.PLAYER_SPEED;
 import static com.untgame.game.helper.Constants.PPM;
 
 public class Player extends GameEntity {
 
 
-    public Player(float width, float height, Body body) {
-        super(width, height, body);
-        this.speed = 8f;
+    public Player(float width, float height, Body body, Texture texture) {
+        super(width, height, body, texture);
+        this.speed = PLAYER_SPEED;
     }
 
     public float getWidth() {
@@ -29,6 +32,12 @@ public class Player extends GameEntity {
         y = body.getPosition().y ;
 
         checkUserInput();
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        batch.draw(texture, (x - width / 4 / PPM) * PPM , (y - height / 4 / PPM) * PPM);
+
     }
 
     private void checkUserInput() {
@@ -59,8 +68,4 @@ public class Player extends GameEntity {
 
     }
 
-    @Override
-    public void render(SpriteBatch batch) {
-
-    }
 }

@@ -22,7 +22,7 @@ public class MainMenuScreen extends ScreenAdapter {
         this.widthScreen = Gdx.graphics.getWidth();
         this.heightScreen = Gdx.graphics.getHeight();
         this.camera = new OrthographicCamera();
-        this.camera.setToOrtho(false, widthScreen, heightScreen);
+        this.camera.setToOrtho(false, widthScreen/2, heightScreen/2);
 
     }
 
@@ -40,18 +40,21 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Play", 100, 500);
-		game.font.draw(game.batch, "Settings", 100, 500-20);
-		game.font.draw(game.batch, "Quit", 100, 500-40);
+        game.font.draw(game.batch, "Play", 100, 100);
+		game.font.draw(game.batch, "Settings", 100, 100-20);
+		game.font.draw(game.batch, "Quit", 100, 100-40);
 
-		Texture menuImg = new Texture("player.png");
-		game.batch.draw(menuImg, 600, 300, 256, 256);
-		game.batch.end();
-
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.getX() >= 100-20 && Gdx.input.isTouched()){
             game.setScreen(new GameScreen(camera));
             dispose();
+        } else {
+            game.font.draw(game.batch, "LOL", 100, 100-60);
         }
+
+        Texture menuImg = new Texture("player.png");
+		game.batch.draw(menuImg, 200, 100, 256, 256);
+		game.batch.end();
+
     }
 
     @Override
