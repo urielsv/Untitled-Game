@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.untgame.game.helper.BodyHelperService;
+import com.untgame.game.helper.TileMapHelper;
 import com.untgame.game.objects.player.Player;
 
 import static com.untgame.game.helper.Constants.*;
@@ -30,6 +32,9 @@ public class GameScreen extends ScreenAdapter {
     private World level; // levels
     private Box2DDebugRenderer box2DDebugRenderer;
 
+    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
+    private TileMapHelper tileMapHelper;
+
     Rectangle rect;
 
     Texture playerImg;
@@ -42,6 +47,8 @@ public class GameScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.level = new World(new Vector2(0, 0), false);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
+        this.tileMapHelper = new TileMapHelper();
+        this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
 
         playerImg = new Texture("player1.png");
 
@@ -77,6 +84,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        orthogonalTiledMapRenderer.render();
 
         batch.begin();
         // render objects
@@ -106,6 +114,7 @@ public class GameScreen extends ScreenAdapter {
         cameraUpdate();
 
         batch.setProjectionMatrix(camera.combined);
+        orthogonalTiledMapRenderer.setView(camera);
 
         player.update();
 
