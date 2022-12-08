@@ -42,12 +42,16 @@ public class GameScreen extends ScreenAdapter {
 
     private Player player;
 
+    public World getLevel() {
+        return level;
+    }
+
     public GameScreen(OrthographicCamera camera) {
         this.camera = camera;
         this.batch = new SpriteBatch();
         this.level = new World(new Vector2(0, 0), false);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
-        this.tileMapHelper = new TileMapHelper();
+        this.tileMapHelper = new TileMapHelper(this);
         this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
 
         playerImg = new Texture("player1.png");
