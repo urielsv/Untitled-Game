@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -18,7 +19,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.untgame.game.helper.BodyHelperService;
 import com.untgame.game.helper.TileMapHelper;
 import com.untgame.game.objects.player.Player;
@@ -28,7 +32,7 @@ import java.util.ArrayList;
 
 import static com.untgame.game.helper.Constants.*;
 
-public class GameScreen extends ScreenAdapter {
+public class GameScreen implements Screen {
 
     //private final UntitledGame game;
 
@@ -40,33 +44,33 @@ public class GameScreen extends ScreenAdapter {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private TileMapHelper tileMapHelper;
 
-    private double timer=0;
+    private double timer = 0;
 
-    Texture playerImg;
-    int imgSize;
-
+    private float screenWidth, screenHeight;
+    private Viewport viewport;
     private Player player;
-
     ArrayList<BasicProyectile> bullets;
 
-    public World getLevel() {
-        return level;
-    }
 
-    public GameScreen(OrthographicCamera camera) {
-        this.camera = camera;
+
+    public GameScreen() {
         this.batch = new SpriteBatch();
-        this.level = new World(new Vector2(0, 0), false);
-        this.box2DDebugRenderer = new Box2DDebugRenderer();
-        this.tileMapHelper = new TileMapHelper(this);
-        this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
+
+        screenWidth = Gdx.graphics.getWidth();
+        screenHeight = Gdx.graphics.getHeight();
+
+        level = new World(new Vector2(0, 0), false);
+        box2DDebugRenderer = new Box2DDebugRenderer();
+        tileMapHelper = new TileMapHelper(this);
+        orthogonalTiledMapRenderer = tileMapHelper.setupMap();
+
+        camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT * ( screenHeight / screenWidth));
+
+        camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
+        camera.update();
+        //camera.setToOrtho(false, screenWidth, screenHeight);
 
         bullets = new ArrayList<BasicProyectile>();
-
-        imgSize = (int) PPM; // TEMP
-
-        camera = new OrthographicCamera(500, 200);
-        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     }
 
@@ -77,36 +81,38 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        //ScreenUtils.clear(0, 0.2f, 0.2f, 1);
+        ScreenUtils.clear(0, 0.2f, 0.2f, 1);
         this.update();
+
+            // TESTEO
+            if (Gdx.input.isKeyPressed(Input.Keys.Q))
+                camera.zoom += 0.02;
+            if (Gdx.input.isKeyPressed(Input.Keys.E))
+                camera.zoom -= 0.02;
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        batch.setProjectionMatrix(camera.combined);
+
         orthogonalTiledMapRenderer.render();
 
+        // BULLETS!
         timer += 0.1f;
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer >= 1.5f){
 
-            Vector2 cursorLocation = new Vector2(0, 0);
-            cursorLocation.x = Gdx.input.getX();
-            cursorLocation.y = Gdx.input.getY();
-
-
-
             float x = (player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM;
-            float y = (player.getBody().getPosition().y - player.getHeight() /4 / PPM) * PPM;
+            float y = (player.getBody().getPosition().y - player.getHeight() / 4 / PPM) * PPM;
 
+            Vector3 theta = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            //Vector3 theta = new Vector3(Gdx.input.getX() - x , Gdx.input.getY() - y, 0);
+            camera.unproject(theta);
 
+            //double norm = Math.sqrt(Math.pow((cursorLocation.x - x), 2) + Math.pow((cursorLocation.y - y), 2));
 
-            double norm = Math.sqrt(Math.pow((cursorLocation.x - x), 2) + Math.pow((cursorLocation.y - y), 2));
-            double thetaX = (cursorLocation.x - x);
-            double thetaY = (cursorLocation.y - y);
+            float rads = (float) Math.atan2(theta.y-y, theta.x-x);
 
-            float angle = (float) Math.atan2(thetaX,thetaY);
-
-
-            bullets.add(new BasicProyectile(x,y , angle));
+            bullets.add(new BasicProyectile(x, y, rads));
             timer=0;
         }
 
@@ -135,12 +141,6 @@ public class GameScreen extends ScreenAdapter {
 
         batch.end();
         box2DDebugRenderer.render(level, camera.combined.scl(PPM));
-        //font.draw(game.batch, "Ingame test.", 5, 100);
-
-        //game.batch.draw(playerImg, player.x, player.y, player.width, player.height);
-
-
-
 
     }
 
@@ -148,11 +148,14 @@ public class GameScreen extends ScreenAdapter {
         this.player = player;
     }
 
+    public World getLevel() {
+        return level;
+    }
+
     private void update() {
-        level.step(1f / REFRESH_RATE, 10, 5);
+        level.step(1f / REFRESH_RATE, 6, 2);
         cameraUpdate();
 
-        batch.setProjectionMatrix(camera.combined);
         orthogonalTiledMapRenderer.setView(camera);
 
         player.update();
@@ -163,6 +166,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void cameraUpdate() {
+
+        batch.setProjectionMatrix(camera.combined);
+
         Vector3 position = camera.position;
         // El round es para que la camara sea mas "smooth"
         // No se por que con 15 funciona bien.
@@ -175,7 +181,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
@@ -195,6 +200,5 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        playerImg.dispose();
     }
 }

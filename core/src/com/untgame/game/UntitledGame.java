@@ -13,7 +13,7 @@ public class UntitledGame extends Game {
 	public void create() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-		this.setScreen(new MainMenuScreen(this));
+		this.setScreen(new MainScreen(this));
 	}
 
 	public void render() {

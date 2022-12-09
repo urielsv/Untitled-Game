@@ -7,4 +7,6 @@ public class Constants {
     public static final int SCREEN_HEIGHT = 720;
     public static final int REFRESH_RATE = 60;
     public static final float PLAYER_SPEED = 1.5f;
+    public static final float GAME_WIDTH = 320;
+    public static final float GAME_HEIGHT = 320;
 }

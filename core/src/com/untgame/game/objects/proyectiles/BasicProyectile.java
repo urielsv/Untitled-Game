@@ -10,6 +10,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import static com.untgame.game.helper.Constants.PPM;
+
 public class BasicProyectile {
     public static final int SPEED = 220;
     public boolean remove;
@@ -42,8 +44,6 @@ public class BasicProyectile {
         y += Math.sin(angle) * (SPEED * deltaTime);
         x += Math.cos(angle) * (SPEED * deltaTime);
 
-        System.out.println("a");
-        System.out.println();
         //x += SPEED * deltaTime;
         if (y > Gdx.graphics.getHeight() || x > Gdx.graphics.getWidth())
             remove = true;
