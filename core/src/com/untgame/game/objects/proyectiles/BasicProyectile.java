@@ -31,20 +31,9 @@ public class BasicProyectile {
 
     public void update (float deltaTime){
 
-        // (x,y) cursor
-        // (a,b) posicion jugador
-
-        // y - b / x - a = tan tita
-
-        // V sin = vert
-        // V cos =  hori
-
-        // Yo quiero que se mantenga constante mi theta para cada bullet.
-
         y += Math.sin(angle) * (SPEED * deltaTime);
         x += Math.cos(angle) * (SPEED * deltaTime);
 
-        //x += SPEED * deltaTime;
         if (y > Gdx.graphics.getHeight() || x > Gdx.graphics.getWidth())
             remove = true;
     }

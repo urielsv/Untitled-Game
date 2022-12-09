@@ -1,4 +1,4 @@
-package com.untgame.game;
+package com.untgame.game.screens;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -19,14 +19,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.viewport.*;
 import com.untgame.game.helper.BodyHelperService;
 import com.untgame.game.helper.TileMapHelper;
 import com.untgame.game.objects.player.Player;
 import com.untgame.game.objects.proyectiles.BasicProyectile;
+import com.untgame.game.scenes.PlayerHud;
 
 import java.util.ArrayList;
 
@@ -44,31 +42,36 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private TileMapHelper tileMapHelper;
 
+    private Viewport gameViewport;
     private double timer = 0;
 
     private float screenWidth, screenHeight;
     private Viewport viewport;
     private Player player;
+    private PlayerHud hud;
     ArrayList<BasicProyectile> bullets;
 
 
 
     public GameScreen() {
-        this.batch = new SpriteBatch();
+        batch = new SpriteBatch();
 
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
 
+        camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
+
+
+        hud = new PlayerHud(this.batch);
         level = new World(new Vector2(0, 0), false);
         box2DDebugRenderer = new Box2DDebugRenderer();
         tileMapHelper = new TileMapHelper(this);
         orthogonalTiledMapRenderer = tileMapHelper.setupMap();
 
-        camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT * ( screenHeight / screenWidth));
+        //viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT, camera);
 
-        camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
+        //camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
         camera.update();
-        //camera.setToOrtho(false, screenWidth, screenHeight);
 
         bullets = new ArrayList<BasicProyectile>();
 
@@ -81,25 +84,32 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0.2f, 0.2f, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.update();
 
-            // TESTEO
+        batch.setProjectionMatrix(camera.combined);
+
+        orthogonalTiledMapRenderer.setView(camera);
+        orthogonalTiledMapRenderer.render();
+
+
+
+        // render objects
+
+        // TESTEO
             if (Gdx.input.isKeyPressed(Input.Keys.Q))
                 camera.zoom += 0.02;
             if (Gdx.input.isKeyPressed(Input.Keys.E))
                 camera.zoom -= 0.02;
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.setProjectionMatrix(camera.combined);
+        //batch.setProjectionMatrix(camera.combined);
 
-        orthogonalTiledMapRenderer.render();
 
         // BULLETS!
         timer += 0.1f;
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer >= 1.5f){
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer >= 1.5f) {
 
             float x = (player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM;
             float y = (player.getBody().getPosition().y - player.getHeight() / 4 / PPM) * PPM;
@@ -113,9 +123,8 @@ public class GameScreen implements Screen {
             float rads = (float) Math.atan2(theta.y-y, theta.x-x);
 
             bullets.add(new BasicProyectile(x, y, rads));
-            timer=0;
+            timer = 0;
         }
-
 
         ArrayList<BasicProyectile> remBullets = new ArrayList<BasicProyectile>();
         for (BasicProyectile bullet : bullets) {
@@ -126,21 +135,23 @@ public class GameScreen implements Screen {
         bullets.removeAll(remBullets);
 
 
-       // direc[dir].img
-
-
-        // render objects
         batch.begin();
 
-            player.draw(batch);
+        player.draw(batch);
 
-            for (BasicProyectile bullet : bullets) {
-                bullet.render(this.batch);
-            }
-            player.render(this.batch);
+        for (BasicProyectile bullet : bullets) {
+            bullet.render(this.batch);
+        }
+        player.render(this.batch);
 
         batch.end();
+
+        hud.stage.getViewport().apply();
+        hud.stage.act();
+        hud.stage.draw();
+
         box2DDebugRenderer.render(level, camera.combined.scl(PPM));
+        // direc[dir].img
 
     }
 
@@ -156,7 +167,7 @@ public class GameScreen implements Screen {
         level.step(1f / REFRESH_RATE, 6, 2);
         cameraUpdate();
 
-        orthogonalTiledMapRenderer.setView(camera);
+        // esto da errores con el hud.
 
         player.update();
 
@@ -168,6 +179,8 @@ public class GameScreen implements Screen {
     private void cameraUpdate() {
 
         batch.setProjectionMatrix(camera.combined);
+
+        //batch.setProjectionMatrix(camera.combined);
 
         Vector3 position = camera.position;
         // El round es para que la camara sea mas "smooth"

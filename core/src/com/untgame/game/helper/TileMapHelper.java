@@ -14,7 +14,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.untgame.game.GameScreen;
+import com.untgame.game.scenes.PlayerHud;
+import com.untgame.game.screens.GameScreen;
 import com.untgame.game.objects.player.Player;
 
 import static com.untgame.game.helper.Constants.PPM;
@@ -23,7 +24,6 @@ public class TileMapHelper {
 
     private TiledMap tiledMap;
     private GameScreen gameScreen;
-
     public TileMapHelper(GameScreen gameScreen){
         this.gameScreen=gameScreen;
     }

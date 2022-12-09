@@ -3,6 +3,7 @@ package com.untgame.game;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.untgame.game.screens.MainScreen;
 
 public class UntitledGame extends Game {
 
