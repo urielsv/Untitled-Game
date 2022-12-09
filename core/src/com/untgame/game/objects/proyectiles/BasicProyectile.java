@@ -6,42 +6,44 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Queue;
+
 public class BasicProyectile {
     public static final int SPEED = 220;
     public boolean remove;
     private static Texture texture;
     float x,y;
+    private float angle;
 
-    public BasicProyectile(float x, float y) {
+    public BasicProyectile(float x, float y, float angle) {
         this.x=x;
         this.y=y;
+        this.angle = angle;
         if (texture == null) {
             texture = new Texture("bullet.png");
         }
     }
 
-    public void update (float deltaTime){
 
-        Vector2 cursorLocation = new Vector2(0, 0);
-        cursorLocation.x = Gdx.input.getX();
-        cursorLocation.y = Gdx.input.getY();
+    public void update (float deltaTime){
 
         // (x,y) cursor
         // (a,b) posicion jugador
 
         // y - b / x - a = tan tita
-        double norm = Math.sqrt(Math.pow((cursorLocation.x - x), 2) + Math.pow((cursorLocation.y - y), 2));
-        double thetaX = (cursorLocation.x - x) / norm;
-        double thetaY = (cursorLocation.y - y) / norm;
+
         // V sin = vert
         // V cos =  hori
 
         // Yo quiero que se mantenga constante mi theta para cada bullet.
-        y += thetaY * (SPEED * deltaTime);
-        x += thetaX * (SPEED * deltaTime);
 
-        System.out.println(thetaX);
-        System.out.println(thetaY);
+        y += Math.sin(angle) * (SPEED * deltaTime);
+        x += Math.cos(angle) * (SPEED * deltaTime);
+
+        System.out.println("a");
+        System.out.println();
         //x += SPEED * deltaTime;
         if (y > Gdx.graphics.getHeight() || x > Gdx.graphics.getWidth())
             remove = true;

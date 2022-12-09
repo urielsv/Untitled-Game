@@ -87,7 +87,26 @@ public class GameScreen extends ScreenAdapter {
 
         timer += 0.1f;
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer >= 1.5f){
-            bullets.add(new BasicProyectile((player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM, (player.getBody().getPosition().y - player.getHeight() / 2 / 2 / PPM) * PPM));
+
+            Vector2 cursorLocation = new Vector2(0, 0);
+            cursorLocation.x = Gdx.input.getX();
+            cursorLocation.y = Gdx.input.getY();
+
+
+
+            float x = (player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM;
+            float y = (player.getBody().getPosition().y - player.getHeight() /4 / PPM) * PPM;
+
+
+
+            double norm = Math.sqrt(Math.pow((cursorLocation.x - x), 2) + Math.pow((cursorLocation.y - y), 2));
+            double thetaX = (cursorLocation.x - x);
+            double thetaY = (cursorLocation.y - y);
+
+            float angle = (float) Math.atan2(thetaX,thetaY);
+
+
+            bullets.add(new BasicProyectile(x,y , angle));
             timer=0;
         }
 
