@@ -22,7 +22,7 @@ public class MainMenuScreen extends ScreenAdapter {
         this.widthScreen = Gdx.graphics.getWidth();
         this.heightScreen = Gdx.graphics.getHeight();
         this.camera = new OrthographicCamera();
-        this.camera.setToOrtho(false, widthScreen/2, heightScreen/2);
+        this.camera.setToOrtho(false, widthScreen / 4f, heightScreen / 4f);
 
     }
 
