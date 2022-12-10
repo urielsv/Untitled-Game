@@ -9,4 +9,5 @@ public class Constants {
     public static final float PLAYER_SPEED = 1.5f;
     public static final float GAME_WIDTH = 320;
     public static final float GAME_HEIGHT = 320;
+    public static final float SHOT_DELAY = 1.75f;
 }
