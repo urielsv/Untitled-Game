@@ -24,7 +24,7 @@ public class BasicProyectile {
         this.y=y;
         this.angle = angle;
         if (texture == null) {
-            texture = new Texture("bullet.png");
+            texture = new Texture("BasicProyectile.png");
         }
     }
 

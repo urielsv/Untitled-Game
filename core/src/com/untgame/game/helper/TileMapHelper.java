@@ -52,7 +52,7 @@ public class TileMapHelper {
                                                             gameScreen.getLevel()
                     );
 
-                    gameScreen.setPlayer(new Player(rectangle.getWidth(), rectangle.getHeight(), body, new Texture("bullet.png")));
+                    gameScreen.setPlayer(new Player(rectangle.getWidth(), rectangle.getHeight(), body, new Texture("player0.png")));
                 }
             }
         }
