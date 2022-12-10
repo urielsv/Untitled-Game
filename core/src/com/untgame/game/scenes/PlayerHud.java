@@ -47,9 +47,9 @@ public class PlayerHud {
         levelLabel = new Label("LEVEL 1", new Label.LabelStyle(new BitmapFont(), Color.LIGHT_GRAY));
         gameLabel = new Label("UNTITLED GAME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        table.add(gameLabel).expandX().padTop(10);
-        table.add(levelLabel).expandX().padTop(10);
-        table.add(timeLabel).expandX().padTop(10);
+        table.add(gameLabel).expandX().padBottom(10);
+        table.add(levelLabel).expandX().padBottom(10);
+        table.add(timeLabel).expandX().padBottom(10);
         table.row();
         table.add(scoreLabel).expandX();
         table.add(countdownLabel).expandX();

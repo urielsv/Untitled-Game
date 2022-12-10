@@ -42,11 +42,8 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private TileMapHelper tileMapHelper;
 
-    private Viewport gameViewport;
     private double timer = 0;
 
-    private float screenWidth, screenHeight;
-    private Viewport viewport;
     private Player player;
     private PlayerHud hud;
     ArrayList<BasicProyectile> bullets;
@@ -56,19 +53,13 @@ public class GameScreen implements Screen {
     public GameScreen() {
         batch = new SpriteBatch();
 
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
-
         camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
-
 
         hud = new PlayerHud(this.batch);
         level = new World(new Vector2(0, 0), false);
         box2DDebugRenderer = new Box2DDebugRenderer();
         tileMapHelper = new TileMapHelper(this);
         orthogonalTiledMapRenderer = tileMapHelper.setupMap();
-
-        //viewport = new FitViewport(GAME_WIDTH, GAME_HEIGHT, camera);
 
         //camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
         camera.update();
@@ -111,18 +102,22 @@ public class GameScreen implements Screen {
         timer += 0.1f;
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && timer >= 1.5f) {
 
-            float x = (player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM;
-            float y = (player.getBody().getPosition().y - player.getHeight() / 4 / PPM) * PPM;
+            Vector3 playerPos = new Vector3(
+                    (player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM,
+                    (player.getBody().getPosition().y - player.getHeight() / 4 / PPM) * PPM,
+                    0
+            );
 
+            Vector3 bulletPos = new Vector3(player.getBody().getPosition().x * PPM, player.getBody().getPosition().y * PPM, 0);
             Vector3 theta = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             //Vector3 theta = new Vector3(Gdx.input.getX() - x , Gdx.input.getY() - y, 0);
             camera.unproject(theta);
 
             //double norm = Math.sqrt(Math.pow((cursorLocation.x - x), 2) + Math.pow((cursorLocation.y - y), 2));
 
-            float rads = (float) Math.atan2(theta.y-y, theta.x-x);
+            float rads = (float) Math.atan2(theta.y-bulletPos.y, theta.x-bulletPos.x);
 
-            bullets.add(new BasicProyectile(x, y, rads));
+            bullets.add(new BasicProyectile(playerPos.x, playerPos.y, rads));
             timer = 0;
         }
 
@@ -164,10 +159,8 @@ public class GameScreen implements Screen {
     }
 
     private void update() {
-        level.step(1f / REFRESH_RATE, 6, 2);
+        level.step(1f / REFRESH_RATE, 6, 5);
         cameraUpdate();
-
-        // esto da errores con el hud.
 
         player.update();
 
@@ -178,15 +171,13 @@ public class GameScreen implements Screen {
 
     private void cameraUpdate() {
 
-        batch.setProjectionMatrix(camera.combined);
-
         //batch.setProjectionMatrix(camera.combined);
 
         Vector3 position = camera.position;
         // El round es para que la camara sea mas "smooth"
         // No se por que con 15 funciona bien.
-        position.x = Math.round(player.getBody().getPosition().x * PPM * 10) / 10f;
-        position.y = Math.round(player.getBody().getPosition().y * PPM * 10) / 10f;
+        position.x = Math.round(player.getBody().getPosition().x * PPM * 16f) / 16f;
+        position.y = Math.round(player.getBody().getPosition().y * PPM * 16f) / 16f;
         camera.position.set(position);
         camera.update();
     }
