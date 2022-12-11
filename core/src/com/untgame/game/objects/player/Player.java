@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.untgame.game.objects.proyectiles.BasicProyectile;
 
 import static com.untgame.game.helper.Constants.PLAYER_SPEED;
 import static com.untgame.game.helper.Constants.PPM;
 
 public class Player extends GameEntity {
-
 
     public Player(float width, float height, Body body, Texture texture) {
         super(width, height, body, texture);
@@ -36,7 +36,7 @@ public class Player extends GameEntity {
 
     @Override
     public void render(SpriteBatch batch) {
-        batch.draw(texture, (x - width / 4 / PPM) * PPM , (y - height / 4 / PPM) * PPM);
+        batch.draw(texture, (x - width / 2 / PPM) * PPM , (y - height / 2 / PPM) * PPM);
 
     }
 

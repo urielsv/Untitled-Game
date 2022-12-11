@@ -5,11 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
 import com.untgame.game.helper.BodyHelperService;
+import com.untgame.game.helper.ContactType;
 import com.untgame.game.objects.player.GameEntity;
 import com.untgame.game.screens.GameScreen;
 
@@ -17,47 +16,68 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
-import static com.untgame.game.helper.Constants.PPM;
+import static com.untgame.game.helper.Constants.*;
 
-public class BasicProyectile {
-    public static final int SPEED = 220;
+public class BasicProyectile implements ContactListener {
+    public static final int SPEED = (int) PPM * 12;
     public boolean remove;
     private static Texture texture;
     float x,y;
+    private int width, height;
     private float angle;
-    public Sprite sprite;
     private GameScreen gameScreen;
-    FixtureDef fixture;
-    BodyDef bodyDef;
     Body body;
 
-    public BasicProyectile(float x, float y, float angle) {
+    public BasicProyectile(float x, float y, float angle, GameScreen gameScreen) {
         this.x=x;
         this.y=y;
         this.angle = angle;
-        if (texture == null) {
-            texture = new Texture("BasicProyectile.png");
-        }
+        this.gameScreen = gameScreen;
+        this.width = (int) PPM/2;
+        this.height = (int) PPM/2;
 
-        sprite = new Sprite(texture);
-        sprite.setPosition(x, y);
-        sprite.setSize(PPM, PPM);
 
+        if (texture == null) texture = new Texture("BasicProyectile.png");
+
+        this.body = BodyHelperService.createBody(x,y, width, height, false, gameScreen.getLevel(), ContactType.BULLET);
+        body.setBullet(true);
 
     }
 
 
     public void update (float deltaTime){
 
-        y += Math.sin(angle) * (SPEED * deltaTime);
-        x += Math.cos(angle) * (SPEED * deltaTime);
+        this.y += Math.sin(angle) * (SPEED * deltaTime);
+        this.x += Math.cos(angle) * (SPEED * deltaTime);
 
-        if (y > Gdx.graphics.getHeight() || x > Gdx.graphics.getWidth())
+        this.body.setLinearVelocity((float) (SPEED * Math.cos(angle)), (float) (SPEED * Math.sin(angle)));
+        if (y > Gdx.graphics.getHeight() * 2 || x > Gdx.graphics.getWidth() * 2 || x < 0 || y < 0)
             remove = true;
+        //System.out.println("Bullet pos:" + "(" + x + "," + y + ")");
     }
 
     public void render(SpriteBatch batch){
         batch.draw(texture, x, y);
+    }
+
+    @Override
+    public void beginContact(Contact contact) {
+
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
     }
 }
 

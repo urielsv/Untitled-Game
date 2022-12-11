@@ -1,27 +1,18 @@
 package com.untgame.game.screens;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.*;
-import com.untgame.game.helper.BodyHelperService;
 import com.untgame.game.helper.TileMapHelper;
 import com.untgame.game.objects.player.Player;
 import com.untgame.game.objects.proyectiles.BasicProyectile;
-import com.untgame.game.scenes.PlayerHud;
+import com.untgame.game.scenes.GameHud;
 
 import java.util.ArrayList;
 
@@ -42,7 +33,7 @@ public class GameScreen implements Screen, InputProcessor {
     private double shotCooldown = 0;
 
     private Player player;
-    private PlayerHud hud;
+    private GameHud hud;
     ArrayList<BasicProyectile> bullets;
 
 
@@ -52,7 +43,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
 
-        hud = new PlayerHud(this.batch);
+        hud = new GameHud(this.batch);
         level = new World(new Vector2(0, 0), false);
         box2DDebugRenderer = new Box2DDebugRenderer();
         tileMapHelper = new TileMapHelper(this);
@@ -61,7 +52,7 @@ public class GameScreen implements Screen, InputProcessor {
         //camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
         camera.update();
 
-        bullets = new ArrayList<BasicProyectile>();
+        bullets = new ArrayList<>();
 
         Gdx.input.setInputProcessor(this);
 
@@ -74,7 +65,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0,0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.update();
 
@@ -99,8 +90,9 @@ public class GameScreen implements Screen, InputProcessor {
 
         // BULLETS!
         shotCooldown += 0.1f;
-        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && shotCooldown >= SHOT_DELAY) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && shotCooldown >= SHOT_DELAY) {
 
+            System.out.println("Shooting!");
             Vector3 playerPos = new Vector3(
                     (player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM,
                     (player.getBody().getPosition().y - player.getHeight() / 4 / PPM) * PPM,
@@ -116,11 +108,14 @@ public class GameScreen implements Screen, InputProcessor {
 
             float rads = (float) Math.atan2(theta.y-bulletPos.y, theta.x-bulletPos.x);
 
-            bullets.add(new BasicProyectile(playerPos.x, playerPos.y, rads));
+            System.out.println(playerPos.x);
+            System.out.println(playerPos.y);
+
+            bullets.add(new BasicProyectile(playerPos.x, playerPos.y, rads, this));
             shotCooldown = 0;
         }
 
-        ArrayList<BasicProyectile> remBullets = new ArrayList<BasicProyectile>();
+        ArrayList<BasicProyectile> remBullets = new ArrayList<>();
         for (BasicProyectile bullet : bullets) {
             bullet.update(delta);
             if (bullet.remove)
@@ -144,7 +139,10 @@ public class GameScreen implements Screen, InputProcessor {
         hud.stage.act();
         hud.stage.draw();
 
-        box2DDebugRenderer.render(level, camera.combined.scl(PPM));
+        // Hold to show hitboxes.
+        if (Gdx.input.isKeyPressed(Input.Keys.H)) {
+            box2DDebugRenderer.render(level, camera.combined.scl(PPM));
+        }
         // direc[dir].img
 
     }
@@ -158,7 +156,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     private void update() {
-        level.step(1f / REFRESH_RATE, 6, 5);
+        level.step(1f / REFRESH_RATE, 6, 2);
         cameraUpdate();
 
         player.update();

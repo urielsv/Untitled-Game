@@ -4,10 +4,11 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 
 import static com.untgame.game.helper.Constants.PPM;
+import static com.untgame.game.helper.ContactType.BULLET;
 
 public class BodyHelperService {
 
-    public static Body createBody(float x, float y, float width, float height, boolean isStatic, World level) {
+    public static Body createBody(float x, float y, float width, float height, boolean isStatic, World level, ContactType type) {
         BodyDef bodyDef = new BodyDef(); // Body definition.
         bodyDef.type = isStatic ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody;
         bodyDef.position.set( x / PPM, y / PPM);
@@ -19,9 +20,10 @@ public class BodyHelperService {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        body.createFixture(fixtureDef);
+        if (type == BULLET) fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef).setUserData(type);
         shape.dispose();
         return body;
-
     }
+
 }

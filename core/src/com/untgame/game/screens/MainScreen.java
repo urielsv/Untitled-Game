@@ -21,22 +21,33 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        float screenCenterX = Gdx.graphics.getWidth() / 2f;
+        float screenCenterY = Gdx.graphics.getHeight() / 2f;
         game.batch.begin();
 
-            game.font.draw(game.batch, "Play", 0, 0);
-		    game.font.draw(game.batch, "Settings", 100, 100-20);
-		    game.font.draw(game.batch, "Quit", 100, 100-40);
+            game.font.draw(game.batch, "Play", screenCenterX - 200, screenCenterY + 60);
+		    game.font.draw(game.batch, "Settings", screenCenterX - 200, screenCenterY + 40);
+		    game.font.draw(game.batch, "Quit", screenCenterX - 200, screenCenterY + 20);
 
-            if (Gdx.input.getX() >= 100-20 && Gdx.input.isTouched()){
+            // Play
+            if ((Gdx.input.getX() >= screenCenterX - 200) && (Gdx.input.getX() <= screenCenterX - 100)
+                    && (Gdx.input.getY() >= screenCenterY - 60) && (Gdx.input.getY() <= screenCenterY - 40) && Gdx.input.isTouched()) {
                 game.setScreen(new GameScreen());
                 dispose();
             } else {
-                game.font.draw(game.batch, "LOL", 100, 100-60);
+                //game.font.draw(game.batch, "xd", screenCenterX, screenCenterY);
             }
-		    game.batch.draw(new Texture("player.png"), 5, 5, 256, 256);
+
+            // Quit.
+            if ((Gdx.input.getX() >= screenCenterX - 200) && (Gdx.input.getX() <= screenCenterX - 100)
+                && (Gdx.input.getY() >= screenCenterY - 20) && (Gdx.input.getY() <= screenCenterY) && Gdx.input.isTouched()) {
+
+                Gdx.app.exit();
+            }
+            game.batch.draw(new Texture("player.png"), 5, 5, 256, 256);
 
 		game.batch.end();
 

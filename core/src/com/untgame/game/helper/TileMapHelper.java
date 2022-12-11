@@ -14,11 +14,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.untgame.game.scenes.PlayerHud;
 import com.untgame.game.screens.GameScreen;
 import com.untgame.game.objects.player.Player;
 
 import static com.untgame.game.helper.Constants.PPM;
+import static com.untgame.game.helper.ContactType.PLAYER;
 
 public class TileMapHelper {
 
@@ -29,7 +29,7 @@ public class TileMapHelper {
     }
 
     public OrthogonalTiledMapRenderer setupMap(){
-        tiledMap = new TmxMapLoader().load("level1.tmx");
+        tiledMap = new TmxMapLoader().load("level0.tmx");
         parseMapObject(tiledMap.getLayers().get("objects").getObjects());
         return new OrthogonalTiledMapRenderer(tiledMap);
     }
@@ -49,10 +49,11 @@ public class TileMapHelper {
                                                             rectangle.getWidth() / 2,
                                                             rectangle.getHeight() / 2,
                                                             false,
-                                                            gameScreen.getLevel()
+                                                            gameScreen.getLevel(),
+                                                            PLAYER
                     );
 
-                    gameScreen.setPlayer(new Player(rectangle.getWidth(), rectangle.getHeight(), body, new Texture("player0.png")));
+                    gameScreen.setPlayer(new Player(rectangle.getWidth(), rectangle.getHeight(), body, new Texture("imp_idle_anim_f0.png")));
                 }
             }
         }
