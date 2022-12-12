@@ -46,7 +46,7 @@ public class GameScreen implements Screen, InputProcessor {
     public GameScreen() {
         batch = new SpriteBatch();
 
-        camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
+        camera = new OrthographicCamera(GAME_WIDTH*16/9, GAME_HEIGHT);
 
         hud = new GameHud(this.batch);
         level = new World(new Vector2(0, 0), false);
@@ -93,7 +93,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         shotCooldown.setCoolDown(shotCooldown.getCoolDown()+0.1f);
         proyectileHelper.shoot();
-        // BULLETS!
+        // BULLETS!!!!1
 
 
 
