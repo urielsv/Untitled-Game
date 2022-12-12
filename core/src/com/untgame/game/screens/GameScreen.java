@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.untgame.game.helper.ContactListenerHelper;
 import com.untgame.game.helper.ProyectileHelper;
 import com.untgame.game.helper.ShootCooldownHelper;
 import com.untgame.game.helper.TileMapHelper;
@@ -53,6 +54,7 @@ public class GameScreen implements Screen, InputProcessor {
         box2DDebugRenderer = new Box2DDebugRenderer();
         tileMapHelper = new TileMapHelper(this);
         orthogonalTiledMapRenderer = tileMapHelper.setupMap();
+        this.level.setContactListener(new ContactListenerHelper());
         proyectileHelper = new ProyectileHelper<>(shotCooldown, player, camera, this, bullets);
         //camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
         camera.update();

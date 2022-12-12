@@ -54,8 +54,8 @@ public class ProyectileHelper<K extends Proyectile> {
 
             float rads = (float) Math.atan2(theta.y - bulletPos.y, theta.x - bulletPos.x);
 
-            System.out.println(playerPos.x);
-            System.out.println(playerPos.y);
+            //System.out.println(playerPos.x);
+            //System.out.println(playerPos.y);
 
             shotCooldown.setCoolDown(0);
             bullets.add((K) new Proyectile(new Vector2(playerPos.x, playerPos.y), rads, DEFAULT_PROYECTILE_SPEED, gameScreen));

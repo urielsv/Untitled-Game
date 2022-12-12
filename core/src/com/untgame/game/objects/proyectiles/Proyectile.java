@@ -12,7 +12,7 @@ import com.untgame.game.screens.GameScreen;
 import static com.untgame.game.helper.Constants.PPM;
 
 
-public class Proyectile implements ContactListener {
+public class Proyectile {
     private Body body;
     private Vector2 velocity;
     private Vector2 originPoint;
@@ -52,32 +52,13 @@ public class Proyectile implements ContactListener {
             remove = true;
     }
 
+    public void hit() {
+        System.out.println("Hit");
+    }
 
     public void render(SpriteBatch batch){
         batch.draw(texture, originPoint.x, originPoint.y);
     }
-
-    @Override
-    public void beginContact(Contact contact) {
-
-    }
-
-    @Override
-    public void endContact(Contact contact) {
-
-    }
-
-    @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-
-    }
-
-    @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-
-    }
-
-
 
 
 }

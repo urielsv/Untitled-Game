@@ -19,6 +19,7 @@ import com.untgame.game.objects.player.Player;
 
 import static com.untgame.game.helper.Constants.PPM;
 import static com.untgame.game.helper.ContactType.PLAYER;
+import static com.untgame.game.helper.ContactType.WALL;
 
 public class TileMapHelper {
 
@@ -64,7 +65,7 @@ public class TileMapHelper {
         bodyDef.type = BodyDef.BodyType.StaticBody;
         Body body = gameScreen.getLevel().createBody(bodyDef);
         Shape shape = createPolygonShape(polygonMapObject);
-        body.createFixture(shape, 1000);
+        body.createFixture(shape, 1000).setUserData(WALL);
         shape.dispose();
     }
 
