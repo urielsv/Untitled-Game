@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.untgame.game.objects.proyectiles.BasicProyectile;
+
 
 import static com.untgame.game.helper.Constants.PLAYER_SPEED;
 import static com.untgame.game.helper.Constants.PPM;

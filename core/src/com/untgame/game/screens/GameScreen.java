@@ -9,9 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.untgame.game.helper.ProyectileHelper;
+import com.untgame.game.helper.ShootCooldownHelper;
 import com.untgame.game.helper.TileMapHelper;
 import com.untgame.game.objects.player.Player;
-import com.untgame.game.objects.proyectiles.BasicProyectile;
+import com.untgame.game.objects.proyectiles.Proyectile;
 import com.untgame.game.scenes.GameHud;
 
 import java.util.ArrayList;
@@ -30,12 +32,15 @@ public class GameScreen implements Screen, InputProcessor {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private TileMapHelper tileMapHelper;
 
-    private double shotCooldown = 0;
+
 
     private Player player;
     private GameHud hud;
-    ArrayList<BasicProyectile> bullets;
 
+    ArrayList<Proyectile> bullets = new ArrayList<>();
+
+    private ShootCooldownHelper shotCooldown= new ShootCooldownHelper(SHOT_DELAY);
+    private ProyectileHelper<Proyectile> proyectileHelper;
 
 
     public GameScreen() {
@@ -48,11 +53,10 @@ public class GameScreen implements Screen, InputProcessor {
         box2DDebugRenderer = new Box2DDebugRenderer();
         tileMapHelper = new TileMapHelper(this);
         orthogonalTiledMapRenderer = tileMapHelper.setupMap();
-
+        proyectileHelper = new ProyectileHelper<>(shotCooldown, player, camera, this, bullets);
         //camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
         camera.update();
 
-        bullets = new ArrayList<>();
 
         Gdx.input.setInputProcessor(this);
 
@@ -87,36 +91,15 @@ public class GameScreen implements Screen, InputProcessor {
 
         //batch.setProjectionMatrix(camera.combined);
 
-
+        shotCooldown.setCoolDown(shotCooldown.getCoolDown()+0.1f);
+        proyectileHelper.shoot();
         // BULLETS!
-        shotCooldown += 0.1f;
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && shotCooldown >= SHOT_DELAY) {
 
-            System.out.println("Shooting!");
-            Vector3 playerPos = new Vector3(
-                    (player.getBody().getPosition().x - player.getWidth() / 4 / PPM ) * PPM,
-                    (player.getBody().getPosition().y - player.getHeight() / 4 / PPM) * PPM,
-                    0
-            );
 
-            Vector3 bulletPos = new Vector3(player.getBody().getPosition().x * PPM, player.getBody().getPosition().y * PPM, 0);
-            Vector3 theta = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            //Vector3 theta = new Vector3(Gdx.input.getX() - x , Gdx.input.getY() - y, 0);
-            camera.unproject(theta);
 
-            //double norm = Math.sqrt(Math.pow((cursorLocation.x - x), 2) + Math.pow((cursorLocation.y - y), 2));
 
-            float rads = (float) Math.atan2(theta.y-bulletPos.y, theta.x-bulletPos.x);
-
-            System.out.println(playerPos.x);
-            System.out.println(playerPos.y);
-
-            bullets.add(new BasicProyectile(playerPos.x, playerPos.y, rads, this));
-            shotCooldown = 0;
-        }
-
-        ArrayList<BasicProyectile> remBullets = new ArrayList<>();
-        for (BasicProyectile bullet : bullets) {
+        ArrayList<Proyectile> remBullets = new ArrayList<>();
+        for (Proyectile bullet : bullets) {
             bullet.update(delta);
             if (bullet.remove)
                 remBullets.add(bullet);
@@ -128,7 +111,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         player.draw(batch);
 
-        for (BasicProyectile bullet : bullets) {
+        for (Proyectile bullet : bullets) {
             bullet.render(this.batch);
         }
         player.render(this.batch);

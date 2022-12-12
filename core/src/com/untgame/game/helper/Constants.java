@@ -10,4 +10,6 @@ public class Constants {
     public static final float GAME_WIDTH = 320;
     public static final float GAME_HEIGHT = 320;
     public static final float SHOT_DELAY = 1.25f;
+    public static final float DEFAULT_PROYECTILE_SPEED = PPM*12;
+
 }
