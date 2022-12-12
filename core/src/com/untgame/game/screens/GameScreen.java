@@ -175,7 +175,7 @@ public class GameScreen implements Screen, InputProcessor {
         // No se por que con 15 funciona bien.
         position.x = Math.round(player.getBody().getPosition().x * PPM * 16f) / 16f;
         position.y = Math.round(player.getBody().getPosition().y * PPM * 16f) / 16f;
-        camera.position.set(position);
+        //camera.position.set(position);
         camera.update();
     }
 
