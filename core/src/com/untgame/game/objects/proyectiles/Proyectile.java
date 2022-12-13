@@ -23,7 +23,6 @@ public class Proyectile {
     public boolean remove;
 
 
-
     public Proyectile(Vector2 originPoint,float angle, float speed, GameScreen gameScreen){
         this.originPoint = originPoint;
         this.velocity = new Vector2(speed*(float)Math.cos(angle)/PPM, speed*(float)Math.sin(angle)/PPM);
@@ -41,6 +40,10 @@ public class Proyectile {
         this(originPoint, angle,speed, gameScreen, texture);
         this.width = width;
         this.height = height;
+    }
+
+    public void deleteProyectile() {
+        this.remove = true;
     }
 
     public void update(float deltaTime){

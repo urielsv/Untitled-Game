@@ -43,7 +43,7 @@ public class GameScreen implements Screen, InputProcessor {
     private ShootCooldownHelper shotCooldown= new ShootCooldownHelper(SHOT_DELAY);
     private ProyectileHelper<Proyectile> proyectileHelper;
 
-
+    private ContactListenerHelper contactListener = new ContactListenerHelper();
     public GameScreen() {
         batch = new SpriteBatch();
 
@@ -54,7 +54,8 @@ public class GameScreen implements Screen, InputProcessor {
         box2DDebugRenderer = new Box2DDebugRenderer();
         tileMapHelper = new TileMapHelper(this);
         orthogonalTiledMapRenderer = tileMapHelper.setupMap();
-        this.level.setContactListener(new ContactListenerHelper());
+        this.level.setContactListener(contactListener);
+
         proyectileHelper = new ProyectileHelper<>(shotCooldown, player, camera, this, bullets);
         //camera.position.set(camera.viewportWidth/2f, camera.viewportHeight/2f, 0);
         camera.update();
@@ -81,6 +82,10 @@ public class GameScreen implements Screen, InputProcessor {
         orthogonalTiledMapRenderer.render();
 
 
+        /*
+        for (Proyectile bullet : bullets) {
+            if (contactListener.checkContact())
+        }*/
 
         // render objects
 
