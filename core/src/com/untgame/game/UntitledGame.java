@@ -10,18 +10,32 @@ import com.untgame.game.screens.MainScreen;
 public class UntitledGame extends Game {
 
 	public SpriteBatch batch;
-	public BitmapFont font;
+	public BitmapFont blackFont, whiteFont;
+	public Pixmap pixmap;
+	public Cursor cursor;
+
+	public BitmapFont getBlackFont() {
+		return blackFont;
+	}
+
+	public BitmapFont getWhiteFont() {
+		return whiteFont;
+	}
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		font = new BitmapFont();
-		Pixmap pixmap = new Pixmap(Gdx.files.internal("cursor.png"));
+		// Fonts
+		blackFont = new BitmapFont(Gdx.files.internal("blackFont.fnt"), false);
+		whiteFont = new BitmapFont(Gdx.files.internal("whiteFont.fnt"), false);
+		// Cursor
+		pixmap = new Pixmap(Gdx.files.internal("cursor.png"));
 		int centerX = 15;
 		int centerY = 15;
-		Cursor cursor = Gdx.graphics.newCursor(pixmap, centerX, centerY);
-		pixmap.dispose();
+		cursor = Gdx.graphics.newCursor(pixmap, centerX, centerY);
 		Gdx.graphics.setCursor(cursor);
+
+		// Screen (start main menu)
 		this.setScreen(new MainScreen(this));
 	}
 
@@ -31,7 +45,9 @@ public class UntitledGame extends Game {
 
 	public void dispose() {
 		batch.dispose();
-		font.dispose();
+		whiteFont.dispose();
+		blackFont.dispose();
+		pixmap.dispose();
 	}
 
 

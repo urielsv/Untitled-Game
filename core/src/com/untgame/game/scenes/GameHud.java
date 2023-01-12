@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.untgame.game.UntitledGame;
 
 import static com.untgame.game.helper.Constants.*;
 
@@ -28,6 +30,7 @@ public class GameHud {
     Label gameLabel;
     Label levelRound;
 
+
     public GameHud(SpriteBatch sb) {
         levelTimer = 300;
         timeCount = 0;
@@ -41,11 +44,12 @@ public class GameHud {
         playerUI.bottom();
         playerUI.setFillParent(true); // size of stage
 
-        countdownLabel = new Label(String.format("%03d", levelTimer), new Label.LabelStyle(new BitmapFont(), Color.LIGHT_GRAY));
-        scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.LIGHT_GRAY));
-        timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.LIGHT_GRAY));
-        levelLabel = new Label("LEVEL 1", new Label.LabelStyle(new BitmapFont(), Color.LIGHT_GRAY));
-        gameLabel = new Label("UNTITLED GAME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        LabelStyle font = new LabelStyle(new BitmapFont(Gdx.files.internal("whiteFont.fnt"), false), Color.WHITE);
+        countdownLabel = new Label(String.format("%03d", levelTimer), font);
+        scoreLabel = new Label(String.format("%06d", score), font);
+        timeLabel = new Label("TIME", font);
+        levelLabel = new Label("LEVEL 1", font);
+        gameLabel = new Label("UNTITLED GAME", font);
         playerUI.add(gameLabel).expandX().padBottom(10);
         playerUI.add(levelLabel).expandX().padBottom(10);
         playerUI.add(timeLabel).expandX().padBottom(10);
@@ -55,12 +59,12 @@ public class GameHud {
 
         stage.addActor(playerUI);
 
-        levelRound = new Label(String.format("ROUND: %03d", round), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        levelRound = new Label(String.format("ROUND: %03d", round), font);
 
         Table generalUI = new Table();
         generalUI.top();
         generalUI.setFillParent(true);
-        generalUI.add(levelRound).expandX().padLeft(Gdx.graphics.getWidth() - 100);
+        generalUI.add(levelRound).expandX().padLeft(Gdx.graphics.getWidth() - 200);
 
         stage.addActor(generalUI);
 

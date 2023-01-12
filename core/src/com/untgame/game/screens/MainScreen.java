@@ -4,11 +4,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.untgame.game.UntitledGame;
 
 public class MainScreen implements Screen {
 
     private UntitledGame game;
+    private TextureAtlas atlas;
+    private Skin skin;
+    private Table table;
+    private TextButton buttOptions, buttPlay, buttQuit;
+    private Label title;
 
     public MainScreen(UntitledGame game) {
         this.game = game;
@@ -28,9 +39,9 @@ public class MainScreen implements Screen {
         float screenCenterY = Gdx.graphics.getHeight() / 2f;
         game.batch.begin();
 
-            game.font.draw(game.batch, "Play", screenCenterX - 200, screenCenterY + 60);
-		    game.font.draw(game.batch, "Settings", screenCenterX - 200, screenCenterY + 40);
-		    game.font.draw(game.batch, "Quit", screenCenterX - 200, screenCenterY + 20);
+            game.whiteFont.draw(game.batch, "Play", screenCenterX - 200, screenCenterY + 60);
+		    game.whiteFont.draw(game.batch, "Settings", screenCenterX - 200, screenCenterY + 40);
+		    game.whiteFont.draw(game.batch, "Quit", screenCenterX - 200, screenCenterY + 20);
 
             // Play
             if ((Gdx.input.getX() >= screenCenterX - 200) && (Gdx.input.getX() <= screenCenterX - 100)

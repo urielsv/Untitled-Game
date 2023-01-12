@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 import static com.untgame.game.helper.Constants.PLAYER_SPEED;
 import static com.untgame.game.helper.Constants.PPM;
+import static java.lang.Math.pow;
 
 public class Player extends GameEntity {
 
@@ -61,7 +62,27 @@ public class Player extends GameEntity {
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             velX = 1;
+        }
 
+        // Diagonals
+       if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.D)) {
+            velX = (float) pow(2, -1/2f);
+            velY = (float) pow(2, -1/2f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.A)) {
+            velX = (float) -pow(2, -1/2f);
+            velY = (float) pow(2, -1/2f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.D)) {
+            velX = (float) pow(2, -1/2f);
+            velY = (float) -pow(2, -1/2f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.A)) {
+            velX = (float) -pow(2, -1/2f);
+            velY = (float) -pow(2, -1/2f);
         }
 
         body.setLinearVelocity(velX * speed, velY * speed);
